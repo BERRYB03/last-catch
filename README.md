@@ -1,14 +1,17 @@
-# Last Catch Cup · LIVE scoreboard
+# Last Catch · Operation: Jason's Last Catch (trip app v2)
 
-Operation: Jason's Last Catch, a bachelor-party fishing comp (16–18 Oct 2026, NZ).
+Bachelor-party fishing weekend app (16–18 Oct 2026, upper Waitematā Harbour, NZ).
 
-Open **https://berryb03.github.io/last-catch/** on your phone, pick your crew slot ("Who are you?"), and score away.
-Every phone updates live. No signal? Entries queue on your phone and sync when you're back online.
-Tip: use "Add to Home Screen" so it opens like an app.
+Open **https://berryb03.github.io/last-catch/** on your phone (or scan the QR code), pick your crew slot ("Who are you?") and score away. No login.
+Tip: use "Add to Home Screen" so it opens like an app. After the first load everything works offline; scores sync when there's signal.
 
-- `index.html`: the whole app (single file, mobile-first)
-- `sw.js`: offline cache so the page reloads without signal
+Tabs: 🏆 Scores (live Last Catch Cup) · 🗺️ Mission (timeline with NOW/NEXT, Jay's picks) · 🎣 Fish (windows, tides, go/no-go, spots, rules) · 🎒 Kit (checklist saved on each phone) · 🕵️ Rogues (Jay's gallery) · 🛟 Info (cabin rules, tap-to-call emergency numbers).
 
-Backend: a dedicated free Supabase project (`last-catch-cup`). The page uses the public publishable key, which can only
-read the scoreboard, add score entries, mark entries undone and rename crew. It can't delete anything or edit points.
-Reset is behind the organiser PIN.
+- `index.html`: the whole app (mobile-first, no build step)
+- `sw.js`: offline cache. **Bump `CACHE` in sw.js on every redeploy** so phones pick up the new version.
+- `assets/`: compressed images (maps, Rogues Gallery posters)
+
+Backend: a dedicated free Supabase project (`last-catch-cup`). The page uses the public publishable key. Anonymous phones can read the
+scoreboard, add score entries (checked: valid points per category, species list, sane lengths, rate limited) and rename crew slots.
+Undo only works on entries made from the same phone (`lc_undo` RPC). Reset is the `lc_reset` RPC: the organiser PIN is checked on the
+server against a bcrypt hash (it isn't in this code), with a lockout after 10 wrong tries in 15 minutes.
